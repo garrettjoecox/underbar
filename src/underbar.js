@@ -209,6 +209,21 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    var bool = false;
+    if (collection.length > 0){
+      _.each(collection, function(i){
+        if (arguments.length > 1){
+          if (iterator(i)){
+            bool = true;
+          }
+        }else{
+          if (i){
+            return true;
+          }
+        }
+      })
+    }
+    return bool;
   };
 
 
@@ -245,6 +260,17 @@
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    var newObj = {};
+    var key = {};
+    for (var i = 1; i < arguments.length; i++) {
+      newObj = arguments[i];
+      for (key in newObj) {
+        if(!obj[key] && obj[key] !== NaN && obj[key] !== ""){
+          obj[key] = newObj[key];
+        }
+      }
+    }
+    return obj;
   };
 
 
@@ -297,6 +323,13 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var args = [];
+    for (var i = 2; i < arguments.length; i++) {
+      args.push(arguments[i]);
+    };
+    setTimeout(function(){
+      func.apply(this, args);
+    }, wait);
   };
 
 
@@ -311,6 +344,16 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var newArray = [];
+    var usedIndex = [];
+    for (var i = 0; i < array.length; i++) {
+      var random = Math.floor(Math.random() * array.length);
+      if(indexOf(usedIndex, random) === -1){
+        usedIndex.push(random);
+        newArray.push(array[random]);
+      }
+    };
+    return newArray;
   };
 
 
