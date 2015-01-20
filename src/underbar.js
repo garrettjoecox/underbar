@@ -99,13 +99,13 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    var result = [];
-    _.each(array, function(i){
-      if (_.indexOf(result, i) === -1){
-        result.push(i)
-      }
-    })
-    return result;
+    var newArray = [];
+    for (var i = 0; i < array.length; i++) {
+        if(_.indexOf(newArray, array[i]) === -1){
+            newArray.push(array[i]);
+        }
+    }
+    return newArray;
   };
 
 
@@ -114,11 +114,11 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
-    var result = [];
-    _.each(collection, function(i){
-      result.push(iterator(i))
-    })
-    return result;
+    var newArray = [];
+    for (var i = 0; i < collection.length; i++) {
+        newArray.push(iterator(collection[i]))
+    }
+    return newArray;
   };
 
   /*
@@ -210,15 +210,16 @@
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
     var bool = false;
+    var args = arguments.length;
     if (collection.length > 0){
       _.each(collection, function(i){
-        if (arguments.length > 1){
-          if (iterator(i)){
+        if(!iterator){
+          if (i === true){
             bool = true;
           }
         }else{
-          if (i){
-            return true;
+          if (iterator(i)){
+            bool = true;
           }
         }
       })
@@ -247,10 +248,9 @@
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
     var newObj = {};
-    var key = {};
-    for (var i = 1; i < arguments.length; i++) {
+    for (var i = 0; i < arguments.length; i++) {
       newObj = arguments[i];
-      for (key in newObj) {
+      for (var key in newObj){
         obj[key] = newObj[key];
       }
     }
@@ -265,7 +265,7 @@
     for (var i = 1; i < arguments.length; i++) {
       newObj = arguments[i];
       for (key in newObj) {
-        if(!obj[key] && obj[key] !== NaN && obj[key] !== ""){
+        if (obj[key] === void 0){
           obj[key] = newObj[key];
         }
       }
@@ -314,6 +314,11 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var memoize = function(key){
+      var cache = memoize.cache;
+
+    }
+    return memoize;
   };
 
   // Delays a function for the given number of milliseconds, and then calls
