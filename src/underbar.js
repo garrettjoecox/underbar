@@ -313,14 +313,18 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function(func) {
-    var memoize = function(key){
-      var cache = memoize.cache;
-
-    }
-    return memoize;
-  };
-
+  _.memoize = function(func, context) {
+    var storage = {};
+    return function() {
+      var args = Array.prototype.slice.call(arguments);
+      if(storage[args]){
+        return storage[args];
+      } else {
+        storage[args] = func.apply(null, arguments);
+      }
+      return storage[args];
+    };
+  }
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
   //
@@ -349,16 +353,16 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-    var newArray = [];
-    var usedIndex = [];
-    for (var i = 0; i < array.length; i++) {
-      var random = Math.floor(Math.random() * array.length);
-      if(indexOf(usedIndex, random) === -1){
-        usedIndex.push(random);
-        newArray.push(array[random]);
+    var shuffled = array.slice();
+    _.each(shuffled, function (item, i){
+      var random = Math.floor(Math.random()* (i + 1))
+      console.log(random)
+      if (random !== i){
+        shuffled[i] = shuffled[random]
       }
-    };
-    return newArray;
+      shuffled[random] = array[i]
+    });
+    return shuffled;
   };
 
 
@@ -388,6 +392,18 @@
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
+    // var tempObj = {}
+    // var archive = []
+    // for (var i = 0; i < arguments.length; i++) {
+    //   var argArray = arguments[i];
+    //   var yah = argArray[i];
+    // console.log("aye")
+    //   tempObj[i].push(yah);
+    // };
+    // for (var key in tempObj){
+    //   archive[key] = tempObj[key]
+    // }
+    // return archive;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
