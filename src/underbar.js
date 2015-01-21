@@ -313,18 +313,18 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function(func, context) {
-    var storage = {};
-    return function() {
+  _.memoize = function(func) {
+    var history = {}
+    return function(){
       var args = Array.prototype.slice.call(arguments);
-      if(storage[args]){
-        return storage[args];
-      } else {
-        storage[args] = func.apply(null, arguments);
+      if (history[args]){
+        return history[args];
+      }else{
+        history[args] = func.apply(null, args)
       }
-      return storage[args];
-    };
-  }
+      return history[args];
+    }
+  };
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
   //
@@ -356,7 +356,6 @@
     var shuffled = array.slice();
     _.each(shuffled, function (item, i){
       var random = Math.floor(Math.random()* (i + 1))
-      console.log(random)
       if (random !== i){
         shuffled[i] = shuffled[random]
       }
@@ -392,18 +391,25 @@
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
   _.zip = function() {
-    // var tempObj = {}
-    // var archive = []
-    // for (var i = 0; i < arguments.length; i++) {
-    //   var argArray = arguments[i];
-    //   var yah = argArray[i];
-    // console.log("aye")
-    //   tempObj[i].push(yah);
-    // };
-    // for (var key in tempObj){
-    //   archive[key] = tempObj[key]
-    // }
-    // return archive;
+    var tempObj = {};
+    var archive = [];
+    for (var i = 0; i < arguments.length; i++) {
+      var argArray = arguments[i];
+      for (var g = 0; g < 3; g++) {
+        if (tempObj[g] === undefined){
+          tempObj[g] = [];
+        }
+        if (argArray[g] === undefined){
+          tempObj[g].push(undefined);
+        }else{
+          tempObj[g].push(argArray[g]);
+        }
+      };
+    };
+    for(var key in tempObj){
+      archive.push(tempObj[key])
+    }
+    return archive;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
@@ -411,16 +417,42 @@
   //
   // Hint: Use Array.isArray to check if something is an array
   _.flatten = function(nestedArray, result) {
-  };
+};
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var results = [];
+    var all = [];
+    for (var i = 0; i < arguments.length; i++) {
+      var argArray = arguments[i];
+      for (var g = 0; g < argArray.length; g++) {
+        if (_.indexOf(all, argArray[g]) === -1){
+          all.push(argArray[g])
+        }else{
+          results.push(argArray[g]);
+        }
+      };
+    };
+    return results;
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    var results = [];
+    var all = [];
+    for (var i = 1; i < arguments.length; i++) {
+      var argsArray = arguments[i];
+      for (var g = 0; g < argsArray.length; g++) {
+        all.push(argsArray[g])
+      };
+    };
+    for (var i = 0; i < array.length; i++) {
+      if(_.indexOf(all, array[i]) === -1)
+      results.push(array[i])
+    };
+    return results;
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
@@ -429,5 +461,16 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+    var throttle = false;
+    return function(){
+      if (throttle){
+      }else{
+        throttle = true;
+        func();
+        setTimeout(function(){
+          throttle = false;
+        }, wait)
+      }
+    }
   };
 }());
