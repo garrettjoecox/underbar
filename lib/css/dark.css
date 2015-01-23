@@ -1,0 +1,27 @@
+body {
+    background-color: #111;
+    color: #888;
+}
+#mocha .test.pass::before {
+    color: #197C2D;
+}
+#mocha .test.fail {
+    color: #833B3B
+}
+#mocha .test.fail pre {
+    color: #888888;
+}
+#mocha .test.fail::before {
+    color: #833B3B;
+}
+#mocha .test pre {
+    border: 1px solid #2F2F2F;
+    border-bottom-color: #888;
+    -webkit-border-radius: 3px;
+    -webkit-box-shadow: 0 1px 3px #eee;
+    -moz-box-shadow: 0 0px 0px #888;
+}
+#mocha-stats em {
+    color: black;
+    color: #888;
+}
