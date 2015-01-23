@@ -40,55 +40,44 @@
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target){
-    var result = -1;
-
-    _.each(array, function(item, index) {
-      if (item === target && result === -1) {
-        result = index;
-      }
-    });
-
-    return result;
+    var results = -1;
+    _.each(array, function (item, index){
+      if (target === item && results === -1) results = index;
+    })
+    return results;
   };
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
-    var result = [];
-    _.each(collection, function(i){
-      if (test(i)){
-        result.push(i)
-      }
+    var results = [];
+    _.each(collection, function (item){
+      if (test(item)) results.push(item);
     })
-    return result;
+    return results;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
-    var newTest = function(val){
-      return !test(val)
-    }
+    var newTest = function(item){return !test(item)};
     return _.filter(collection, newTest);
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    var newArray = [];
-    for (var i = 0; i < array.length; i++) {
-        if(_.indexOf(newArray, array[i]) === -1){
-            newArray.push(array[i]);
-        }
-    }
-    return newArray;
+    var results = [];
+    _.each(array, function(item){
+      if (_.indexOf(results, item) === -1) results.push(item);
+    });
+    return results;
   };
-
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
-    var newArray = [];
-    for (var i = 0; i < collection.length; i++) {
-        newArray.push(iterator(collection[i]))
-    }
-    return newArray;
+    var results = [];
+    _.each(collection, function(item){
+      results.push(iterator(item));
+    })
+    return results;
   };
 
   // Takes an array of objects and returns and array of the values of
@@ -104,44 +93,27 @@
   // iterator(accumulator, item) for each item. accumulator should be
   // the return value of the previous iterator call.
   _.reduce = function(collection, iterator, accumulator) {
-    var accumulatorExists = arguments.length > 2;
-    _.each(collection, function (item){
-      if (!accumulatorExists){
-        accumulator = item;
-        accumulatorExists = true;
-      }else{
-        accumulator = iterator(accumulator, item);
+    var result = accumulator === undefined ? collection[0] : accumulator;
+    _.each(collection, function (item, index){
+      if (accumulator !== undefined || index !== 0){
+        result = iterator(result, item);
       }
     })
-    return accumulator;
+    return result;
   };
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
-    return _.reduce(collection, function(wasFound, item) {
-      if (wasFound) {
-        return true;
-      }
-      return item === target;
-    }, false);
+    return _.indexOf(collection, target) === -1 ? false : true
   };
-
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    var bool = true;
-    _.each(collection, function (i){
-      if(!i && i !== 0){
-        bool = false;
-      }
-      if(iterator){
-        if(!iterator(i)){
-          bool = false;
-        }
-      }
-    })
-    return bool;
-
+    if(iterator){
+      return _.filter(collection, iterator).length === collection.length ? true : false;
+    }else{
+      return _.indexOf(collection, false) === -1 ? true : false
+    }
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
