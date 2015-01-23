@@ -119,22 +119,15 @@
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-    var bool = false;
-    var args = arguments.length;
-    if (collection.length > 0){
-      _.each(collection, function(i){
-        if(!iterator){
-          if (i === true){
-            bool = true;
-          }
-        }else{
-          if (iterator(i)){
-            bool = true;
-          }
-        }
-      })
-    }
-    return bool;
+    var result = false;
+    _.each(collection, function(item, index){
+      if (iterator){
+        if (iterator(item)) result = true;
+      }else{
+        if (item) result = true;
+      }
+    })
+    return result;
   };
 
   // Extend a given object with all the properties of the passed in
@@ -166,34 +159,16 @@
     return obj;
   };
 
-
-  /**
-   * FUNCTIONS
-   * =========
-   *
-   * Now we're getting into function decorators, which take in any function
-   * and return out a new version of the function that works somewhat differently
-   */
-
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
   _.once = function(func) {
-    // TIP: These variables are stored in a "closure scope" (worth researching),
-    // so that they'll remain available to the newly-generated function every
-    // time it's called.
     var alreadyCalled = false;
     var result;
-
-    // TIP: We'll return a new function that delegates to the old one, but only
-    // if it hasn't been called before.
     return function() {
       if (!alreadyCalled) {
-        // TIP: .apply(this, arguments) is the standard way to pass on all of the
-        // infromation from one function call to another.
         result = func.apply(this, arguments);
         alreadyCalled = true;
       }
-      // The new function always returns the originally computed result.
       return result;
     };
   };
@@ -206,6 +181,8 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+  //
+  // Still don't understand fully
   _.memoize = function(func) {
     var history = {}
     return function(){
@@ -218,43 +195,28 @@
       return history[args];
     }
   };
+
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
-  //
-  // The arguments for the original function are passed after the wait
-  // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
-  // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-    var args = [];
-    for (var i = 2; i < arguments.length; i++) {
-      args.push(arguments[i]);
-    };
+    var args = Array.prototype.slice.call(arguments, 2);
     setTimeout(function(){
       func.apply(this, args);
     }, wait);
   };
 
-
-  /**
-   * ADVANCED COLLECTION OPERATIONS
-   * ==============================
-   */
-
   // Randomizes the order of an array's contents.
-  //
-  // TIP: This function's test suite will ask that you not modify the original
-  // input array. For a tip on how to make a copy of an array, see:
-  // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-    var shuffled = array.slice();
-    _.each(shuffled, function (item, i){
-      var random = Math.floor(Math.random()* (i + 1))
-      if (random !== i){
-        shuffled[i] = shuffled[random]
-      }
-      shuffled[random] = array[i]
-    });
-    return shuffled;
+    var results = [];
+    var usedIndex = [];
+    while (usedIndex.length < array.length){
+      var ran = Math.floor(Math.random()*array.length)
+      if (_.indexOf(usedIndex, ran) === -1) usedIndex.push(ran);
+    }
+    _.each(usedIndex, function(item){
+      results.push(array[item]);
+    })
+    return results;
   };
 
 
