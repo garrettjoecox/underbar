@@ -239,34 +239,16 @@
 
   // Zip together two or more arrays with elements of the same index
   // going together.
-  //
-  // Clean Up?
   _.zip = function() {
-    var tempObj = {};
     var archive = [];
     for (var i = 0; i < arguments.length; i++) {
-      var argArray = arguments[i];
-      for (var g = 0; g < 3; g++) {
-        if (tempObj[g] === undefined){
-          tempObj[g] = [];
-        }
-        if (argArray[g] === undefined){
-          tempObj[g].push(undefined);
-        }else{
-          tempObj[g].push(argArray[g]);
-        }
-      };
+      archive.push(_.pluck(arguments, i))
     };
-    for(var key in tempObj){
-      archive.push(tempObj[key])
-    }
     return archive;
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
   // The new array should contain all elements of the multidimensional array.
-  //
-  // Clean Up?
   _.flatten = function(nestedArray) {
     var results = [];
     var filter = function(thing){
