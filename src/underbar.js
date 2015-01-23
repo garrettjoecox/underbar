@@ -219,18 +219,15 @@
     return results;
   };
 
-
-  /**
-   * EXTRA CREDIT
-   * =================
-   *
-   * Note: This is the end of the pre-course curriculum. Feel free to continue,
-   * but nothing beyond here is required.
-   */
-
   // Calls the method named by functionOrKey on each value in the list.
-  // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    return _.map(collection, function(item){
+      if (typeof functionOrKey === "string"){
+        return item[functionOrKey].apply(item, args);
+      }else{
+        return functionOrKey.apply(item, args);
+      }
+    })
   };
 
   // Sort the object's values by a criterion produced by an iterator.
@@ -243,8 +240,7 @@
   // Zip together two or more arrays with elements of the same index
   // going together.
   //
-  // Example:
-  // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
+  // Clean Up?
   _.zip = function() {
     var tempObj = {};
     var archive = [];
@@ -270,25 +266,29 @@
   // Takes a multidimensional array and converts it to a one-dimensional array.
   // The new array should contain all elements of the multidimensional array.
   //
-  // Hint: Use Array.isArray to check if something is an array
-  _.flatten = function(nestedArray, result) {
+  // Clean Up?
+  _.flatten = function(nestedArray) {
+    var results = [];
+    var filter = function(thing){
+      if (!Array.isArray(thing)){
+        results.push(thing);
+      }else{
+        return _.each(thing, function(item){
+          return filter(item);
+        })
+      }
+    }
+    filter(nestedArray);
+    return results;
 };
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
-  _.intersection = function() {
+  _.intersection = function(array1, array2) {
     var results = [];
-    var all = [];
-    for (var i = 0; i < arguments.length; i++) {
-      var argArray = arguments[i];
-      for (var g = 0; g < argArray.length; g++) {
-        if (_.indexOf(all, argArray[g]) === -1){
-          all.push(argArray[g])
-        }else{
-          results.push(argArray[g]);
-        }
-      };
-    };
+    _.each(array1, function(item){
+      if(_.indexOf(array2, item) !== -1) results.push(item);
+    })
     return results;
   };
 
@@ -298,33 +298,26 @@
     var results = [];
     var all = [];
     for (var i = 1; i < arguments.length; i++) {
-      var argsArray = arguments[i];
-      for (var g = 0; g < argsArray.length; g++) {
-        all.push(argsArray[g])
-      };
+      _.each(arguments[i], function(item){
+        all.push(item);
+      })
     };
-    for (var i = 0; i < array.length; i++) {
-      if(_.indexOf(all, array[i]) === -1)
-      results.push(array[i])
-    };
+    _.each(array, function(item){
+      if (_.indexOf(all, item) === -1) results.push(item);
+    })
     return results;
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
   // during a given window of time.  See the Underbar readme for extra details
   // on this function.
-  //
-  // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
-    var throttle = false;
+    var flipswitch = false;
     return function(){
-      if (throttle){
-      }else{
-        throttle = true;
+      if(!flipswitch){
+        flipswitch = true;
         func();
-        setTimeout(function(){
-          throttle = false;
-        }, wait)
+        setTimeout(function(){flipswitch = false}, wait)
       }
     }
   };
