@@ -235,7 +235,25 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var tempArray = [];
+    if(iterator === 'length'){
+      collection.sort(function(a, b) {return a.length - b.length;})
+    }else if(_.containsNumber(collection)){
+      collection.sort(function(a, b) {return a - b;})
+    }else{
+      collection.sort(iterator)
+    }
+    return collection;
   };
+
+  // Returns true if collection contains a number.
+  _.containsNumber = function(collection){
+    var result = false;
+    _.each(collection, function(item){
+      if (typeof item === 'number') result = true;
+    });
+    return result;
+  }
 
   // Zip together two or more arrays with elements of the same index
   // going together.
