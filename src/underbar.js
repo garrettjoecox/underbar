@@ -64,10 +64,13 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    var results = [];
+    var uniq = {}, results = [];
     _.each(array, function(item){
-      if (_.indexOf(results, item) === -1) results.push(item);
+      uniq[item] = item;
     });
+    _.each(uniq, function(item){
+      results.push(item)
+    })
     return results;
   };
 
@@ -108,6 +111,7 @@
   };
 
   // Determine whether all of the elements match a truth test.
+  // Refactor
   _.every = function(collection, iterator) {
     if(iterator){
       return _.filter(collection, iterator).length === collection.length ? true : false;
@@ -118,6 +122,7 @@
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
+  // Refactor
   _.some = function(collection, iterator) {
     var result = false;
     _.each(collection, function(item, index){
@@ -134,12 +139,11 @@
   // object(s).
   _.extend = function(obj) {
     var newObj = {};
-    for (var i = 0; i < arguments.length; i++) {
-      newObj = arguments[i];
-      for (var key in newObj){
-        obj[key] = newObj[key];
-      }
-    }
+    _.each(arguments, function(newObj){
+      _.each(newObj, function(item, key){
+        obj[key] = item;
+      })
+    })
     return obj;
   };
 
@@ -216,7 +220,7 @@
     _.each(usedIndex, function(item){
       results.push(array[item]);
     })
-    return results;
+    return array.join() === results.join() ? _.shuffle(results) : results;
   };
 
   // Calls the method named by functionOrKey on each value in the list.
