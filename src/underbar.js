@@ -19,8 +19,7 @@
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-    if (n > array.length){return array}
-    return n === undefined ? array[array.length - 1] : array.slice(array.length - n, array.length)
+    return n === undefined ? array[array.length - 1] : array.slice(Math.max(0, array.length-n));
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -33,18 +32,18 @@
     }else{
       for (var key in collection){
         iterator(collection[key], key, collection);
-      }
-    }
+      };
+    };
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target){
-    var results = -1;
+    var result = -1;
     _.each(array, function (item, index){
-      if (target === item && results === -1) results = index;
-    })
-    return results;
+      if (target === item && result === -1) result = index;
+    });
+    return result;
   };
 
   // Return all elements of an array that pass a truth test.
@@ -52,14 +51,13 @@
     var results = [];
     _.each(collection, function (item){
       if (test(item)) results.push(item);
-    })
+    });
     return results;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
-    var newTest = function(item){return !test(item)};
-    return _.filter(collection, newTest);
+    return _.filter(collection, function(item){return !test(item)});
   };
 
   // Produce a duplicate-free version of the array.
@@ -113,32 +111,25 @@
   // Determine whether all of the elements match a truth test.
   // Refactor
   _.every = function(collection, iterator) {
-    if(iterator){
-      return _.filter(collection, iterator).length === collection.length ? true : false;
-    }else{
-      return _.indexOf(collection, false) === -1 ? true : false
-    }
+    iterator = iterator || _.identity;
+    return !!_.reduce(collection, function(accumulator, value){
+      return accumulator && iterator(value);
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   // Refactor
   _.some = function(collection, iterator) {
-    var result = false;
-    _.each(collection, function(item, index){
-      if (iterator){
-        if (iterator(item)) result = true;
-      }else{
-        if (item) result = true;
-      }
-    })
-    return result;
+    iterator = iterator || _.identity;
+    return !_.every(collection, function(value){
+      return !iterator(value);
+    });
   };
 
   // Extend a given object with all the properties of the passed in
   // object(s).
   _.extend = function(obj) {
-    var newObj = {};
     _.each(arguments, function(newObj){
       _.each(newObj, function(item, key){
         obj[key] = item;
@@ -150,16 +141,11 @@
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
-    var newObj = {};
-    var key = {};
-    for (var i = 1; i < arguments.length; i++) {
-      newObj = arguments[i];
-      for (key in newObj) {
-        if (obj[key] === void 0){
-          obj[key] = newObj[key];
-        }
-      }
-    }
+    _.each(arguments, function(source){
+      _.each(source, function(value, key){
+        obj[key] === undefined  && (obj[key] = value);
+      })
+    })
     return obj;
   };
 
@@ -172,7 +158,7 @@
       if (!alreadyCalled) {
         result = func.apply(this, arguments);
         alreadyCalled = true;
-      }
+      };
       return result;
     };
   };
@@ -206,10 +192,10 @@
     while (usedIndex.length < array.length){
       var ran = Math.floor(Math.random()*array.length)
       if (_.indexOf(usedIndex, ran) === -1) usedIndex.push(ran);
-    }
+    };
     _.each(usedIndex, function(item){
       results.push(array[item]);
-    })
+    });
     return array.join() === results.join() ? _.shuffle(results) : results;
   };
 
@@ -220,8 +206,8 @@
         return item[functionOrKey].apply(item, args);
       }else{
         return functionOrKey.apply(item, args);
-      }
-    })
+      };
+    });
   };
 
   // Sort the object's values by a criterion produced by an iterator.
