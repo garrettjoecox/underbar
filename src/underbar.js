@@ -28,12 +28,12 @@
     if (Array.isArray(collection)){
       for (var i = 0; i < collection.length; i++) {
         iterator(collection[i], i, collection);
-      };
+      }
     }else{
       for (var key in collection){
         iterator(collection[key], key, collection);
-      };
-    };
+      }
+    }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -57,7 +57,7 @@
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
-    return _.filter(collection, function(item){return !test(item)});
+    return _.filter(collection, function(item){ return !test(item); });
   };
 
   // Produce a duplicate-free version of the array.
@@ -67,8 +67,8 @@
       uniq[item] = item;
     });
     _.each(uniq, function(item){
-      results.push(item)
-    })
+      results.push(item);
+    });
     return results;
   };
 
@@ -77,7 +77,7 @@
     var results = [];
     _.each(collection, function(item){
       results.push(iterator(item));
-    })
+    });
     return results;
   };
 
@@ -99,13 +99,13 @@
       if (accumulator !== undefined || index !== 0){
         result = iterator(result, item);
       }
-    })
+    });
     return result;
   };
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
-    return _.indexOf(collection, target) === -1 ? false : true
+    return _.indexOf(collection, target) === -1 ? false : true;
   };
 
   // Determine whether all of the elements match a truth test.
@@ -133,8 +133,8 @@
     _.each(arguments, function(newObj){
       _.each(newObj, function(item, key){
         obj[key] = item;
-      })
-    })
+      });
+    });
     return obj;
   };
 
@@ -143,9 +143,9 @@
   _.defaults = function(obj) {
     _.each(arguments, function(source){
       _.each(source, function(value, key){
-        obj[key] === undefined  && (obj[key] = value);
-      })
-    })
+        obj[key] === undefined && (obj[key] = value);
+      });
+    });
     return obj;
   };
 
@@ -158,7 +158,7 @@
       if (!alreadyCalled) {
         result = func.apply(this, arguments);
         alreadyCalled = true;
-      };
+      }
       return result;
     };
   };
@@ -166,14 +166,14 @@
   // Memorize an expensive function's results by storing them. You may assume
   // that the function takes only one argument and that it is a primitive.
   _.memoize = function(func) {
-    var history = {}
+    var history = {};
     return function(){
       var args = Array.prototype.slice.call(arguments);
       if (!history[args]){
-        history[args] = func.apply(null, args)
+        history[args] = func.apply(null, args);
       }
       return history[args];
-    }
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -190,9 +190,9 @@
     var results = [];
     var usedIndex = [];
     while (usedIndex.length < array.length){
-      var ran = Math.floor(Math.random()*array.length)
+      var ran = Math.floor(Math.random()*array.length);
       if (_.indexOf(usedIndex, ran) === -1) usedIndex.push(ran);
-    };
+    }
     _.each(usedIndex, function(item){
       results.push(array[item]);
     });
@@ -206,7 +206,7 @@
         return item[functionOrKey].apply(item, args);
       }else{
         return functionOrKey.apply(item, args);
-      };
+      }
     });
   };
 
@@ -217,11 +217,11 @@
   _.sortBy = function(collection, iterator) {
     var tempArray = [];
     if(iterator === 'length'){
-      collection.sort(function(a, b) {return a.length - b.length;})
+      collection.sort(function(a, b) {return a.length - b.length;});
     }else if(_.containsNumber(collection)){
-      collection.sort(function(a, b) {return a - b;})
+      collection.sort(function(a, b) {return a - b;});
     }else{
-      collection.sort(iterator)
+      collection.sort(iterator);
     }
     return collection;
   };
@@ -233,15 +233,15 @@
       if (typeof item === 'number') result = true;
     });
     return result;
-  }
+  };
 
   // Zip together two or more arrays with elements of the same index
   // going together.
   _.zip = function() {
     var archive = [];
     for (var i = 0; i < arguments.length; i++) {
-      archive.push(_.pluck(arguments, i))
-    };
+      archive.push(_.pluck(arguments, i));
+    }
     return archive;
   };
 
@@ -255,9 +255,9 @@
       }else{
         return _.each(thing, function(item){
           return filter(item);
-        })
+        });
       }
-    }
+    };
     filter(nestedArray);
     return results;
 };
@@ -268,7 +268,7 @@
     var results = [];
     _.each(array1, function(item){
       if(_.indexOf(array2, item) !== -1) results.push(item);
-    })
+    });
     return results;
   };
 
@@ -280,11 +280,11 @@
     for (var i = 1; i < arguments.length; i++) {
       _.each(arguments[i], function(item){
         all.push(item);
-      })
-    };
+      });
+    }
     _.each(array, function(item){
       if (_.indexOf(all, item) === -1) results.push(item);
-    })
+    });
     return results;
   };
 
@@ -297,8 +297,8 @@
       if(!flipswitch){
         flipswitch = true;
         func();
-        setTimeout(function(){flipswitch = false}, wait)
+        setTimeout(function(){ flipswitch = false; }, wait);
       }
-    }
+    };
   };
 }());
