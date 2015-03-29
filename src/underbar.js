@@ -62,12 +62,9 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    var uniq = {}, results = [];
+    var results = [];
     _.each(array, function(item){
-      uniq[item] = item;
-    });
-    _.each(uniq, function(item){
-      results.push(item);
+      if (_.indexOf(results, item) === -1) results.push(item);
     });
     return results;
   };
@@ -166,13 +163,11 @@
   // Memorize an expensive function's results by storing them. You may assume
   // that the function takes only one argument and that it is a primitive.
   _.memoize = function(func) {
-    var history = {};
+    var memory = {};
     return function(){
-      var args = Array.prototype.slice.call(arguments);
-      if (!history[args]){
-        history[args] = func.apply(null, args);
-      }
-      return history[args];
+      var args = JSON.stringify(arguments);
+      if (!memory[args]) memory[args] = func.apply(this, arguments);
+      return memory[args];
     };
   };
 
